@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">BezierInterpolator Demo</string>
+    <string name="duration">Duration: %d ms</string>
+    <string name="parameters">BezierInterpolator(%1$.3f, %2$.3f, %3$.3f, %4$.3f)</string>
+</resources>
