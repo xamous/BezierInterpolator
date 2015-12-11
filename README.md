@@ -7,6 +7,7 @@ An implementation of Android [Interpolator](http://developer.android.com/referen
     someAnimator.setInterpolator(interpolator);
 
 #Utility app
-![screenshot of sample app](https://github.com/xamous/BezierInterpolator/blob/master/images-folder/screenshot.png)
+![screenshot of sample app](https://github.com/xamous/BezierInterpolator/blob/master/images-folder/screenshot.png)  
 
+Icon credit: [Jerry Low](https://www.iconfinder.com/jerrylow)
 
