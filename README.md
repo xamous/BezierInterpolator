@@ -1,3 +1,7 @@
+# Deprecated
+Android Support Library already provided a [PathInterpolatorCompat](http://developer.android.com/intl/zh-tw/reference/android/support/v4/view/animation/PathInterpolatorCompat.html) with similar feature.
+The utility app already been modified to support PathInterpolatorCompat, it's still a handy tool to communicate with motion designers.
+
 # BezierInterpolator
 An implementation of Android [Interpolator](http://developer.android.com/reference/android/view/animation/Interpolator.html) where the rate of change following given [Bézier curve](https://en.wikipedia.org/wiki/B%C3%A9zier_curve). Including an utility app allows motion designers to tune the curve easily.
 
@@ -7,7 +11,7 @@ An implementation of Android [Interpolator](http://developer.android.com/referen
     someAnimator.setInterpolator(interpolator);
 
 #Utility app
-![screenshot of sample app](https://github.com/xamous/BezierInterpolator/blob/master/images-folder/screenshot.gif)  
+![screenshot of sample app](https://github.com/xamous/BezierInterpolator/blob/master/images-folder/screenshot.png)  
 
 Icon credit: [Jerry Low](https://www.iconfinder.com/jerrylow)
 

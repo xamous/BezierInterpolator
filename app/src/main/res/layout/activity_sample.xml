@@ -52,6 +52,33 @@
         android:layout_centerHorizontal="true"
         android:textAppearance="?android:textAppearanceMedium"
         android:textColor="#777"
+        android:gravity="center"
         android:text="@string/parameters"/>
+
+    <Switch
+        android:id="@+id/toggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/actor"
+        android:layout_centerHorizontal="true"
+        android:padding="10dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/toggle"
+        android:layout_toLeftOf="@id/toggle"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/bezier_interpolator"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/toggle"
+        android:layout_toRightOf="@id/toggle"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/path_interpolator_compat"/>
 
 </RelativeLayout>

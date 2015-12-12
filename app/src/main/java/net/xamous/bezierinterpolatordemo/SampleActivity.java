@@ -6,29 +6,35 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.os.Bundle;
+import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
+import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import net.xamous.bezierinterpolator.BezierInterpolator;
 
 
 
-public class SampleActivity extends AppCompatActivity implements BezierView.OnCurveChangedListener, SeekBar.OnSeekBarChangeListener {
+
+public class SampleActivity extends AppCompatActivity implements BezierView.OnCurveChangedListener, SeekBar.OnSeekBarChangeListener, CompoundButton.OnCheckedChangeListener {
 
     protected ImageView mActor;
     protected BezierView mBezierView;
     protected SeekBar mSeekBar;
     protected TextView mDurationText;
     protected TextView mParamText;
+    protected Switch mSwitch;
 
     protected ValueAnimator mActorAnim;
     protected ValueAnimator mIndicatorAnim;
     protected AnimatorSet mAnimatorSet;
-    protected BezierInterpolator mInterpolator;
+    protected Interpolator mInterpolator;
     protected long mDuration;
 
     protected final static float DEFAULT_X1 = 0;
@@ -60,6 +66,9 @@ public class SampleActivity extends AppCompatActivity implements BezierView.OnCu
         mBezierView = (BezierView) findViewById(R.id.bezierView);
         mBezierView.setCurve(DEFAULT_X1, DEFAULT_Y1, DEFAULT_X2, DEFAULT_Y2);
         mBezierView.setOnCurveChangedListener(this);
+
+        mSwitch = (Switch) findViewById(R.id.toggle);
+        mSwitch.setOnCheckedChangeListener(this);
 
         onCurveChanged(DEFAULT_X1, DEFAULT_Y1, DEFAULT_X2, DEFAULT_Y2);
 
@@ -94,8 +103,12 @@ public class SampleActivity extends AppCompatActivity implements BezierView.OnCu
 
     @Override
     public void onCurveChanged(float x1, float y1, float x2, float y2) {
-        mInterpolator = new BezierInterpolator(x1, y1, x2, y2);
+        mInterpolator = createInterpolator(x1, y1, x2, y2);
         mParamText.setText(String.format(getString(R.string.parameters), x1, y1, x2, y2));
+    }
+
+    private Interpolator createInterpolator(float x1, float y1, float x2, float y2) {
+        return mSwitch.isChecked() ? new BezierInterpolator(x1, y1, x2, y2) : PathInterpolatorCompat.create(x1, y1, x2, y2);
     }
 
     private void setDuration(int duration) {
@@ -119,4 +132,9 @@ public class SampleActivity extends AppCompatActivity implements BezierView.OnCu
     public void onStartTrackingTouch(SeekBar seekBar) { }
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) { }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        mBezierView.usePathInterpolator(isChecked);
+    }
 }

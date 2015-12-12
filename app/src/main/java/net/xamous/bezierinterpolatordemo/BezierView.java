@@ -8,9 +8,11 @@ import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.graphics.Shader;
+import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Interpolator;
 
 import net.xamous.bezierinterpolator.BezierInterpolator;
 
@@ -23,7 +25,7 @@ public class BezierView extends View {
 
     private Path mPath = new Path();
     private Paint mPaint = new Paint();
-    private BezierInterpolator mInterpolator;
+    private Interpolator mInterpolator;
     private int mStrokeWidth;
     private float mIndicatorX = 0;
     private PointF mPoint1 = new PointF();
@@ -147,7 +149,7 @@ public class BezierView extends View {
     public void setCurve(float x1, float y1, float x2, float y2) {
         mPoint1.set(x1, y1);
         mPoint2.set(x2, y2);
-        mInterpolator = new BezierInterpolator(x1, y1, x2, y2);
+        mInterpolator = createInterpolator(x1, y1, x2, y2);
         invalidate();
     }
 
@@ -200,7 +202,7 @@ public class BezierView extends View {
 
         mDraggingPoint.set(ptX, ptY);
 
-        mInterpolator = new BezierInterpolator(mPoint1.x, mPoint1.y, mPoint2.x, mPoint2.y);
+        mInterpolator = createInterpolator(mPoint1.x, mPoint1.y, mPoint2.x, mPoint2.y);
 
         invalidate();
     }
@@ -216,5 +218,15 @@ public class BezierView extends View {
         sRect.set(sPointTmp.x - hitSize, sPointTmp.y - hitSize,
                 sPointTmp.x + hitSize, sPointTmp.y + hitSize);
         return sRect.contains(x, y);
+    }
+
+    private boolean mUsePathInterpolator = false;
+    public void usePathInterpolator(boolean usePathInterpolator) {
+        mUsePathInterpolator = usePathInterpolator;
+    }
+
+    private Interpolator createInterpolator(float x1, float y1, float x2, float y2) {
+        return mUsePathInterpolator ? PathInterpolatorCompat.create(x1, y1, x2, y2)
+                : new BezierInterpolator(x1, y1, x2, y2);
     }
 }
