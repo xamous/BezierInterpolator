@@ -75,7 +75,7 @@ public class BezierView extends View {
         final int range = getRange();
         canvas.translate((getWidth() - range) / 2, (getHeight() - range) / 2);
 
-        drawLine(canvas, range, range);
+        drawBaseline(canvas, range, range);
         drawBorder(canvas, range, range);
         drawCurve(canvas, range, range);
         drawHandles(canvas, range, range);
@@ -99,7 +99,7 @@ public class BezierView extends View {
         mPaint.setStyle(Paint.Style.STROKE);
     }
 
-    private void drawLine(Canvas canvas, int width, int height) {
+    private void drawBaseline(Canvas canvas, int width, int height) {
         mPaint.setColor(BASELINE_COLOR);
         canvas.drawLine(0, height, width, 0, mPaint);
     }
@@ -113,11 +113,16 @@ public class BezierView extends View {
         mPaint.setStyle(Paint.Style.FILL);
         mPath.reset();
         int pointX = (int) (mIndicatorX * width);
-        for (int x = 0; x < width; x++) {
+        for (int x = 0; x <= width; x++) {
             int y = (int) ((1 - mInterpolator.getInterpolation((float) x / width)) * height);
             if (x == 0) mPath.moveTo(x, y);
-            if (x == pointX) canvas.drawCircle(x, y, getIndicatorSize(), mPaint);
             else mPath.lineTo(x, y);
+
+            if (x == pointX) {
+                canvas.drawLine(0, y, x, y, mPaint);
+                canvas.drawCircle(x, y, getIndicatorSize(), mPaint);
+                canvas.drawCircle(0, y, getIndicatorSize(), mPaint);
+            }
         }
         mPaint.setShader(new LinearGradient(0, height, width, 0,
                 0XFF000000 | HANDLE_COLOR_START, 0XFF000000 | HANDLE_COLOR_END,
@@ -146,9 +151,13 @@ public class BezierView extends View {
         invalidate();
     }
 
-    public void showIndicator(float x) {
+    public void setIndicatorPos(float x) {
         mIndicatorX = x;
         invalidate();
+    }
+
+    public float getIndicatorPos() {
+        return mIndicatorX;
     }
 
     @Override

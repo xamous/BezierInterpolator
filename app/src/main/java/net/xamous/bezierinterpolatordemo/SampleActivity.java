@@ -2,11 +2,13 @@ package net.xamous.bezierinterpolatordemo;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -23,7 +25,9 @@ public class SampleActivity extends AppCompatActivity implements BezierView.OnCu
     protected TextView mDurationText;
     protected TextView mParamText;
 
-    protected ValueAnimator mAnimator;
+    protected ValueAnimator mActorAnim;
+    protected ValueAnimator mIndicatorAnim;
+    protected AnimatorSet mAnimatorSet;
     protected BezierInterpolator mInterpolator;
     protected long mDuration;
 
@@ -63,18 +67,18 @@ public class SampleActivity extends AppCompatActivity implements BezierView.OnCu
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
-        mAnimator = ObjectAnimator.ofFloat(mActor, "translationX", actorWidth,
+        mActorAnim = ObjectAnimator.ofFloat(mActor, "translationX", actorWidth,
                 metrics.widthPixels - actorWidth * 2);
+        mActorAnim.setInterpolator(mInterpolator);
 
-        mAnimator.setDuration(mDuration);
-        mAnimator.setInterpolator(mInterpolator);
-        mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                mBezierView.showIndicator(animation.getAnimatedFraction());
-            }
-        });
-        mAnimator.addListener(new AnimatorListenerAdapter() {
+        mIndicatorAnim = ObjectAnimator.ofFloat(mBezierView, "indicatorPos", 0, 1);
+        mIndicatorAnim.setInterpolator(new LinearInterpolator());
+
+        mAnimatorSet = new AnimatorSet();
+        mAnimatorSet.playTogether(mActorAnim, mIndicatorAnim);
+
+
+        mAnimatorSet.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
                 mActor.postDelayed(new Runnable() {
@@ -90,7 +94,7 @@ public class SampleActivity extends AppCompatActivity implements BezierView.OnCu
 
     @Override
     public void onCurveChanged(float x1, float y1, float x2, float y2) {
-        mInterpolator = new BezierInterpolator(x1, x2, y1, y2);
+        mInterpolator = new BezierInterpolator(x1, y1, x2, y2);
         mParamText.setText(String.format(getString(R.string.parameters), x1, y1, x2, y2));
     }
 
@@ -100,9 +104,9 @@ public class SampleActivity extends AppCompatActivity implements BezierView.OnCu
     }
 
     private void startAnimation() {
-        mAnimator.setInterpolator(mInterpolator);
-        mAnimator.setDuration(mDuration);
-        mAnimator.start();
+        mActorAnim.setInterpolator(mInterpolator);
+        mAnimatorSet.setDuration(mDuration);
+        mAnimatorSet.start();
     }
 
 
