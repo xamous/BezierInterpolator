@@ -113,7 +113,6 @@ public class BezierView extends View {
     }
 
     private void drawCurve(Canvas canvas, int width, int height) {
-        Log.d("William", "mInterpolator: " + mInterpolator);
         mPaint.setStyle(Paint.Style.FILL);
         mPath.reset();
         int pointX = (int) (mIndicatorX * width);
