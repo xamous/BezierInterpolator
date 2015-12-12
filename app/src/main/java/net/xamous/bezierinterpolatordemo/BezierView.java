@@ -10,6 +10,7 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Interpolator;
@@ -112,6 +113,7 @@ public class BezierView extends View {
     }
 
     private void drawCurve(Canvas canvas, int width, int height) {
+        Log.d("William", "mInterpolator: " + mInterpolator);
         mPaint.setStyle(Paint.Style.FILL);
         mPath.reset();
         int pointX = (int) (mIndicatorX * width);
@@ -223,6 +225,7 @@ public class BezierView extends View {
     private boolean mUsePathInterpolator = false;
     public void usePathInterpolator(boolean usePathInterpolator) {
         mUsePathInterpolator = usePathInterpolator;
+        mInterpolator = createInterpolator(mPoint1.x, mPoint1.y, mPoint2.x, mPoint2.y);
     }
 
     private Interpolator createInterpolator(float x1, float y1, float x2, float y2) {
